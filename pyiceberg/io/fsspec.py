@@ -142,6 +142,9 @@ def _s3(properties: Properties) -> AbstractFileSystem:
     config_kwargs = {}
     register_events: Dict[str, Callable[[Properties], None]] = {}
 
+    if properties.get("s3.remote-signing-enabled", None):
+        properties["s3.signer"] = "S3V4RestSigner"
+
     if signer := properties.get("s3.signer"):
         logger.info("Loading signer %s", signer)
         if signer_func := SIGNERS.get(signer):
